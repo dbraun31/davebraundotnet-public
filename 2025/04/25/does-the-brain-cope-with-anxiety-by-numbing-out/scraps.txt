@@ -1,0 +1,158 @@
+### Subjective arousal ratings varied a lot across participants and time
+
+Participants were quite different in how they rated their subjective arousal.
+Some exhibited more bimodal responses (ie, responded on both extremes of the
+                                       scale), while others' responses hovered around the same value (see *Figure*
+\@ref(fig:distributions)*A*).
+
+These differences between participants are broken down more finely by looking at
+how responses unfolded over time (see *Figure* \@ref(fig:distributions)*B*).
+Each point in *Figure* \@ref(fig:distributions)*B* reflects one subjective
+arousal rating obtained from one participant at one thought probe. Some
+participants fluctuated between extreme high vs. low on the subjective arousal
+scale across each thought probe, while others more gradually transitioned
+between high vs. low on the subjective arousal scale.
+
+```{r distributions, fig.cap='Distribution of subjective arousal ratings across participants. (A) Distributions of subjective arousal ratings across randomly selected participants. (B) Subjective arousal ratings across trials for randomly selected participants.', cache=FALSE}
+d <- read.csv('MW_EEG_behavioral.csv')
+
+blues <- colorRampPalette(brewer.pal(9, 'Blues'))(100)
+set.seed(534543)
+p1 <- d %>% 
+    select(subject, arou) %>% 
+    filter(subject %in% sample(subject, 10)) %>% 
+    group_by(subject) %>% 
+    mutate(arou_m = mean(arou)) %>% 
+    ungroup() %>% 
+    mutate(subject = as.factor(subject)) %>% 
+    ggplot(aes(x = arou, y = reorder(subject, arou_m), fill = after_stat(x))) + 
+    geom_density_ridges_gradient(rel_min_height=.01, alpha=.7) + 
+    scale_fill_gradientn(colors = blues) + 
+    labs(
+        x = 'Subjective arousal',
+        y = 'Participant',
+        fill = ''
+    ) + 
+    theme_bw() + 
+    theme(axis.ticks = element_blank(),
+          panel.grid = element_blank(),
+          legend.position = 'none',
+          axis.text.y = element_blank())
+
+bads <- d %>% 
+    group_by(subject) %>% 
+    summarize(count = n()) %>% 
+    filter(count < 50) %>% 
+    pull(subject)
+    
+p2 <- d %>% 
+    select(subject, arou) %>% 
+    group_by(subject) %>% 
+    mutate(trial = 1:n()) %>% 
+    ungroup() %>% 
+    filter(!subject %in% bads) %>% 
+    filter(subject %in% sample(subject, 5)) %>% 
+    ggplot(aes(x = trial, y = arou)) + 
+    geom_line(color = '#3E8EC4') + 
+geom_point(color = '#3E8EC4') + 
+    facet_grid(subject~.) + 
+    labs(
+        x = 'Trial',
+        y = 'Subjective arousal'
+    ) + 
+    theme_bw() + 
+    theme(axis.ticks = element_blank(),
+          panel.grid = element_blank(),
+          axis.text.y = element_blank(),
+          strip.background = element_blank(),
+          strip.text = element_blank())
+
+g <- ggpubr::ggarrange(p1, p2, labels = c('A.', 'B.'), nrow = 2)
+g
+```
+
+I NEED THIS
+
+```{r}
+library(ggpubr)
+source('visualize_clusters.r')
+m <- readRDS('cluster_result.rds')
+cluster_id <- which(m$result$p_values < .05)
+topo <- plot_topo(m, cluster_id, n_breaks = 1, nrow = 1)
+
+
+channels <- m$result$channels[m$result$clusters[[2]][[2]] + 1]
+times <- m$result$times[m$result$clusters[[2]][[1]] + 1]
+d <- m$eeg 
+
+
+N <- length(unique(d$subject))
+
+pd <- d %>% 
+    gather(channel, voltage, Fp1:POz) %>% 
+    filter(channel %in% channels) %>% 
+    group_by(subject, condition, time) %>% 
+    summarize(voltage_ = mean(voltage)) %>% 
+    group_by(condition, time) %>% 
+    summarize(voltage = mean(voltage_), se = sd(voltage_) / sqrt(N)) 
+
+rib <- pd %>% 
+    filter(time %in% times) %>% 
+    group_by(time) %>% 
+    summarize(ymin = min(voltage, na.rm = TRUE), ymax = max(voltage, na.rm = TRUE))
+
+low <- '#FC8D59'
+high <- '#91BFDB'
+
+ts <- pd %>% 
+    ggplot(aes(x = time, y = voltage)) + 
+    geom_rect(aes(xmin = .25, xmax = .650, ymin = min(voltage), ymax = max(voltage)),
+               color = 'steelblue', fill = NA, linetype = 'dashed') + 
+    geom_ribbon(data = rib, aes(ymin = ymin, ymax = ymax, 
+                                xmin = times[1], xmax = times[length(times)], y=1),
+                alpha = .6, fill = 'green') + 
+    geom_ribbon(aes(ymin = voltage - se, ymax = voltage + se, fill = condition), alpha = .3) + 
+    geom_line(aes(color = condition)) +
+    labs(
+        x = 'Time post heartbeat (s)',
+        y = latex2exp::TeX('$Voltage~ (\\mu ~V)$'),
+        color = 'Subjective arousal',
+        fill = 'Subjective arousal'
+    ) + 
+    scale_color_manual(values = c(Deactivated = low, Activated = high)) +
+    scale_fill_manual(values = c(Deactivated = low, Activated = high)) +
+    theme_bw() + 
+    theme(axis.ticks = element_blank(),
+          panel.grid = element_blank(),
+          legend.position = 'bottom')
+
+
+g <- ggarrange(ts, topo, labels = c('A.', 'B.'), nrow=2)
+print(g)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+```{r, eval=FALSE}
+# For individual differences
+hep_subjects_specific <- d %>% 
+    gather(channel, voltage, Fz:F8) %>% 
+    mutate(string = paste(time, channel, sep='_')) %>% 
+    filter(string %in% cluster$string) %>% 
+    group_by(subject, condition) %>% 
+    summarize(voltage = mean(voltage)) %>% 
+    mutate(condition = ifelse(condition == 'Activated', 'High Arousal', 'Low Arousal')) 
+
+```
+
+  more text please just update

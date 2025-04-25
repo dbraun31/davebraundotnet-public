@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on David Braun</title>
+    <link>/post/</link>
+    <description>Recent content in Posts on David Braun</description>
+    <generator>Hugo</generator>
+    <language>en-US</language>
+    <lastBuildDate>Thu, 01 Jan 2015 13:09:13 -0600</lastBuildDate>
+    <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>More project summaries coming soon</title>
+      <link>/2015/01/01/more-project-summaries-coming-soon/</link>
+      <pubDate>Thu, 01 Jan 2015 13:09:13 -0600</pubDate>
+      <guid>/2015/01/01/more-project-summaries-coming-soon/</guid>
+      <description>Stay tuned.</description>
+    </item>
+  </channel>
+</rss>
