@@ -2,24 +2,24 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>//localhost:4321/</loc>
-    <lastmod>2025-04-25T13:09:13-06:00</lastmod>
+    <loc>/</loc>
+    <lastmod>2025-04-24T13:09:13-06:00</lastmod>
   </url><url>
-    <loc>//localhost:4321/2025/04/25/does-the-brain-cope-with-anxiety-by-numbing-out/</loc>
-    <lastmod>2025-04-25T13:09:13-06:00</lastmod>
+    <loc>/2025/04/24/does-the-brain-cope-with-anxiety-by-numbing-out/</loc>
+    <lastmod>2025-04-24T13:09:13-06:00</lastmod>
   </url><url>
-    <loc>//localhost:4321/post/</loc>
-    <lastmod>2025-04-25T13:09:13-06:00</lastmod>
+    <loc>/post/</loc>
+    <lastmod>2025-04-24T13:09:13-06:00</lastmod>
   </url><url>
-    <loc>//localhost:4321/2015/01/01/more-project-summaries-coming-soon/</loc>
+    <loc>/2015/01/01/more-project-summaries-coming-soon/</loc>
     <lastmod>2015-01-01T13:09:13-06:00</lastmod>
   </url><url>
-    <loc>//localhost:4321/about/</loc>
+    <loc>/about/</loc>
   </url><url>
-    <loc>//localhost:4321/categories/</loc>
+    <loc>/categories/</loc>
   </url><url>
-    <loc>//localhost:4321/publications/</loc>
+    <loc>/publications/</loc>
   </url><url>
-    <loc>//localhost:4321/tags/</loc>
+    <loc>/tags/</loc>
   </url>
 </urlset>
