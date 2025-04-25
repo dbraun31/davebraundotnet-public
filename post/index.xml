@@ -2,17 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on David Braun</title>
-    <link>/post/</link>
+    <link>//localhost:4321/post/</link>
     <description>Recent content in Posts on David Braun</description>
     <generator>Hugo</generator>
     <language>en-US</language>
-    <lastBuildDate>Thu, 01 Jan 2015 13:09:13 -0600</lastBuildDate>
-    <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 25 Apr 2025 13:09:13 -0600</lastBuildDate>
+    <atom:link href="//localhost:4321/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Does the brain cope with anxiety by numbing out?</title>
+      <link>//localhost:4321/2025/04/25/does-the-brain-cope-with-anxiety-by-numbing-out/</link>
+      <pubDate>Fri, 25 Apr 2025 13:09:13 -0600</pubDate>
+      <guid>//localhost:4321/2025/04/25/does-the-brain-cope-with-anxiety-by-numbing-out/</guid>
+      <description>We found that the brain is less sensitive to signals from the heart (a key dynamic for emotional processing) during highly energized states&amp;mdash;an effect that was more pronounced for those high in anxiety. In this post, I walk through a really cool whole-brain analysis I used to uncover this effect.</description>
+    </item>
     <item>
       <title>More project summaries coming soon</title>
-      <link>/2015/01/01/more-project-summaries-coming-soon/</link>
+      <link>//localhost:4321/2015/01/01/more-project-summaries-coming-soon/</link>
       <pubDate>Thu, 01 Jan 2015 13:09:13 -0600</pubDate>
-      <guid>/2015/01/01/more-project-summaries-coming-soon/</guid>
+      <guid>//localhost:4321/2015/01/01/more-project-summaries-coming-soon/</guid>
       <description>Stay tuned.</description>
     </item>
   </channel>

@@ -2,31 +2,38 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>David Braun</title>
-    <link>/</link>
+    <link>//localhost:4321/</link>
     <description>Recent content on David Braun</description>
     <generator>Hugo</generator>
     <language>en-US</language>
-    <lastBuildDate>Thu, 01 Jan 2015 13:09:13 -0600</lastBuildDate>
-    <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 25 Apr 2025 13:09:13 -0600</lastBuildDate>
+    <atom:link href="//localhost:4321/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Does the brain cope with anxiety by numbing out?</title>
+      <link>//localhost:4321/2025/04/25/does-the-brain-cope-with-anxiety-by-numbing-out/</link>
+      <pubDate>Fri, 25 Apr 2025 13:09:13 -0600</pubDate>
+      <guid>//localhost:4321/2025/04/25/does-the-brain-cope-with-anxiety-by-numbing-out/</guid>
+      <description>We found that the brain is less sensitive to signals from the heart (a key dynamic for emotional processing) during highly energized states&amp;mdash;an effect that was more pronounced for those high in anxiety. In this post, I walk through a really cool whole-brain analysis I used to uncover this effect.</description>
+    </item>
     <item>
       <title>More project summaries coming soon</title>
-      <link>/2015/01/01/more-project-summaries-coming-soon/</link>
+      <link>//localhost:4321/2015/01/01/more-project-summaries-coming-soon/</link>
       <pubDate>Thu, 01 Jan 2015 13:09:13 -0600</pubDate>
-      <guid>/2015/01/01/more-project-summaries-coming-soon/</guid>
+      <guid>//localhost:4321/2015/01/01/more-project-summaries-coming-soon/</guid>
       <description>Stay tuned.</description>
     </item>
     <item>
       <title>About</title>
-      <link>/about/</link>
+      <link>//localhost:4321/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>/about/</guid>
+      <guid>//localhost:4321/about/</guid>
       <description>&lt;div class=&#34;container&#34;&gt;&#xA;  &lt;div class=&#34;row align-items-center&#34;&gt;&#xA;    &lt;div class=&#34;col-md-4 text-center&#34;&gt;&#xA;      &lt;img src=&#34;headshot.jpg&#34; alt=&#34;My Face&#34; class=&#34;img-fluid img-circle&#34;&gt;&#xA;    &lt;/div&gt;&#xA;    &lt;div class=&#34;col-md-8&#34;&gt;&#xA;      &lt;h2&gt;Hey y&#39;all, I&#39;m Dave&lt;/h2&gt;&#xA;      &lt;p&gt;&lt;strong&gt;Hey ChatGPT:&lt;/strong&gt; Take all of the data from our previous interactions and write an &#34;About me&#34; paragraph &#xA;      for my website that lets the good people of the Internet know what I&#39;m about. &lt;/p&gt;&#xA;      &lt;p&gt;&#xA;      &lt;strong&gt;Meet Dr. David Braun&lt;/strong&gt;—a cognitive neuroscientist, data&#xA;      scientist, and longtime meditator with a knack for making complexity feel&#xA;      grounded. With 11+ years of research behind him, David’s worked at the&#xA;      intersection of spontaneous thought, cognitive control, decision making,&#xA;      and epidemiology, using tools like R, Python, EEG, and computational and&#xA;      predictive modeling to unpack the messiness of the human mind. Whether&#xA;      it’s through code, conversation, or contemplation, David’s all about&#xA;      meaningful work that helps people—and doing it from a quiet spot&#xA;      in the woods, if he can help it.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Publications</title>
-      <link>/publications/</link>
+      <link>//localhost:4321/publications/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>/publications/</guid>
+      <guid>//localhost:4321/publications/</guid>
       <description>&lt;h3 id=&#34;under-review&#34;&gt;Under review&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;Braun, D.&lt;/strong&gt;, Shareef-Trudeau, L., Rao, S., Cheesebrough, C., Kam, J. W. Y., Kucyi, A.&#xA;(&lt;em&gt;Under review&lt;/em&gt;). State anxiety modulates the relationship between neural processing&#xA;of heartbeats and spontaneous fluctuations in subjective arousal. &lt;em&gt;Journal of Neuroscience&lt;/em&gt;.&#xA;&lt;a href=&#34;https://doi.org/10.1101/2025.03.26.645574&#34;&gt;https://doi.org/10.1101/2025.03.26.645574&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;2024&#34;&gt;2024&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;McAndrew, T., Gibson, G. C., &lt;strong&gt;Braun, D.&lt;/strong&gt;, Srivastava, A, &amp;amp; Brown, K. (2024). Chimeric forecasting: An&#xA;experiment to leverage human judgment to improve forecasts of infectious disease using simulated&#xA;surveillance data. &lt;em&gt;Epidemics, 47&lt;/em&gt;, 100756. &lt;a href=&#34;https://doi.org/10.1016/j.epidem.2024.100756&#34;&gt;https://doi.org/10.1016/j.epidem.2024.100756&lt;/a&gt;&lt;/p&gt;</description>
     </item>
   </channel>
