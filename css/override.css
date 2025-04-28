@@ -1,3 +1,59 @@
+
+/* Read more buttonss */
+
+/* Dave's Root Variabless */
+:root {
+    --primary-bg: #fcf8f2;
+    --primary-text: #353d49;
+    --secondary-text: #252627;
+    --link-color: #879094;
+    --shadow-color: rgba(0, 0, 0, 0.15);
+    --borders: #555;
+    
+    --button-bg: #4d4f51;
+    --button-bg-hover: #3e4042;
+    
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary-bg: #252627;
+        --primary-text: #fff;
+        --secondary-text: #fefefe;
+        --link-color: #9fb1b6;
+        
+        --button-bg: #4d4f51;
+        --button-bg-hover: #3e4042;
+    }
+
+    img {
+        opacity: 90%;
+    }
+}
+
+.read-more-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background-color: var(--button-bg);
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    text-align: center;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.card .read-more-btn{
+    color: #fefefe;
+}
+
+.read-more-btn:hover {
+    background-color: var(--button-bg-hover);
+}
+
+
+/* Other stuff */
+
 .subtitle {
 	word-wrap: break-word;
     white-space: normal;
@@ -21,22 +77,6 @@
     line-height: .8;
 }
 
-.read-more-btn {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 8px 12px;
-    background-color: #4d4f51;
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-    font-weight: bold;
-    text-align: center;
-    transition: background-color 0.2s ease-in-out;
-}
-
-.read-more-btn:hover {
-    background-color: #3e4042;
-}
 
 .img-circle {
     border-radius: 50%;
@@ -71,3 +111,12 @@
     background-color: #cacacb;
 }
 
+/* Highlight box */
+
+.highlightbox {
+    border: 2px solid var(--secondary-text); 
+    padding: 0px 15px; 
+    border-radius: 8px; 
+    background-color: none; 
+    margin: 20px 0;
+}

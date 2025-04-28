@@ -86,10 +86,10 @@ d %>%
           panel.border = element_blank(),
           plot.tag.position = c(.002, 1),
           plot.tag = element_text(size = 10),
-          panel.background = element_rect(fill = '#fdfcf9', color = NA),
+          panel.background = element_rect(fill = '#fcf8f2', color = NA),
           plot.margin = unit(c(0, 0, 0, 0), 'pt'))
 
-ggsave('static/images/about_background.png', height = 1440, width = 2560, units = 'px', dpi = 300)
+ggsave('static/images/about_background.png', height = 1440*1.2, width = 2560*1.2, units = 'px', dpi = 300)
 
 
 
