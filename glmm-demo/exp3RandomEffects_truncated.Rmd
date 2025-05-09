@@ -1,0 +1,505 @@
+---
+title: "Experiment 3 Random Effects"
+author: "Dave Braun"
+date: "8/30/2019"
+output: 
+  html_document:
+    code_folding: hide
+    df_print: paged
+    includes:
+      after_body: ../../../../footer.html
+      in_header: ../../../../favicon.html
+knit:
+  (function(inputFile, encoding) {
+      rmarkdown::render(inputFile,
+                    encoding = encoding,
+                    output_file = 'index.html')})
+---
+
+```{r include = FALSE}
+library(tidyverse)
+library(data.table)
+library(lme4)
+#library(bbmle)
+library(car)
+library(gridExtra)
+```
+
+
+*This document was last updated at `r Sys.time()`.*
+
+This document is dedicated to exploring analyses of choice data from Experiment 3 that control for random effects. Much of my approach here is informed by [Ben Bolker's incredible resources](https://bbolker.github.io/mixedmodels-misc/) on generalized linear mixed models (GLMMs).
+
+*Much of the narrative here is copy/pasted from Exp 2, I'm going through and adjusting the analyses for these Exp 3 data manually, however.*
+
+# The Case for Random Effects
+As I believe the brilliant [Lucy Napper](https://psychology.cas2.lehigh.edu/content/lucy-napper) once explained to me in PSYC Stats 422 a long time ago, a random effect is generally any variable in the experimental design whose levels are a sampling of all possible levels in the population or world. One can then group the fixed effects by the random factors to assess how the fixed factors vary across levels of the random factors. It's also a part of the design you're not explicitly looking to study. [Bolker](https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html) warns us, however, that determining whether a factor should be treated as fixed or random is often more difficult that it seems.  
+
+A common example (and the factor I'll be treating as a random effect in these analyses) is thinking about subjects as a random factor. For any study, a group of subjects is randomly sampled and is supposed to represent the larger population of people. We assume the fixed effects are homogeneous across subjects, and the extent to which that's not true is problematic for inference to the population. The same applies to another common example like items or stimuli. If one selects faces to use as stimuli, you're assuming whatever effects you observe would extrapolate to all faces. If we can quantify the extent to which the fixed effects vary across levels of subjects or stimuli, then (1) we have a better understanding of the true fixed effects underlying the patterns in the data, and (2) we're better able to infer how those effects will manifest in a new sampling of subjects or items. 
+
+## The general form of the general(ized) linear mixed model
+I'll quickly review what's essentially the regression equation for generalized linear mixed models (for a quick reference, I found [this](https://stats.idre.ucla.edu/other/mult-pkg/introduction-to-linear-mixed-models/) to be an excellent review).  
+
+The general level 1 equation is as follows:
+
+$$
+\hat{Y} = \beta_{0j} + \beta_{1j} * X_{1ij} . . . + \epsilon_i
+$$
+
+Where the only difference between this equation and a non-mixed model is that the fixed effects are free to vary between subjects, as denoted by the $j$ subscript. The level 2 equations look as follows:  
+
+$$
+\beta_{0j} = \gamma_{00} + u_{0j}\\
+\beta_{1j} = \gamma_{01} + u_{1j}
+$$
+
+Where $\gamma_{00}$ and $\gamma_{01}$ are the true intercepts and slopes, respectively, and where the $u$ terms are normally distributed with a mean of zero and a variance determined by the variance-covariance matrix of the random effects. So the fixed effects are modified by these random variance terms, and that modification is constant within subjects.
+
+## Data exploration: Random effects in Experiment 3 choice data
+
+The need for a mixed model jumped out to me when visualizing the between-subject variability in the predicted choice effects, particularly the main effect of difficulty on risk preferences:  
+
+*Note: for now I'm only using the basic choice data, meaning **not** including data from rapid fire or the choice-based trimming outlined in the [rapid fire document](../rapidFire/)*
+
+```{r}
+d <- read.csv('../../../data/dstCleanChoice2.csv')
+d$selSafeDeck <- ifelse(d$selectedRiskyDeck == 1, 0, 1)
+N <- nrow(data.table(d)[,.(count = .N), by = subject])
+
+sMeans <- d %>%
+  mutate(condition = factor(condition)) %>% 
+  mutate(condition = factor(condition, levels = levels(condition)[c(2,1,4,3)])) %>% 
+  group_by(subject, condition) %>% 
+  summarize(selSafeDeck = mean(selSafeDeck))
+
+condMeans <- sMeans %>%
+  group_by(condition) %>% 
+  summarize(ssd = mean(selSafeDeck))
+
+sMeans %>% 
+  group_by(condition) %>% 
+  summarize(ssd = mean(selSafeDeck), se = sd(selSafeDeck) / sqrt(N)) %>% 
+  ggplot(aes(x = condition, y = ssd)) +
+  geom_point(size = 4, shape = 23, fill = 'red', color = 'black') +
+  geom_jitter(data = sMeans, aes(x = condition, y = selSafeDeck), width = .05, height = 0, alpha = 0.3) +
+  geom_line(data = sMeans, aes(x = condition, y = selSafeDeck, group = subject), linetype = 'dashed', alpha = 0.3) +
+  geom_boxplot(data = sMeans, aes(x = condition, y = selSafeDeck), fill = NA) +
+  geom_label(data = condMeans, mapping = aes(x = condition, y = ssd, label = round(ssd, 2)), hjust = 1.5, vjust = 1.5) + 
+  labs(
+    x = 'Critical Deck Intensity',
+    y = 'Proportion Selections of Safe Deck',
+    caption = 'Red diamonds reflect condition means; Horizontal bars in box plots reflect medians.'
+  ) +
+  scale_x_discrete(labels = c('Easy Moderate', 'Easy Extreme', 'Hard Moderate', 'Hard Extreme')) +
+  theme_bw()
+  
+```
+
+
+
+```{r}
+d %>% 
+  group_by(subject) %>% 
+  summarize(ssd = mean(selSafeDeck)) %>% 
+  ggplot(aes(x = subject, y = ssd)) +
+  geom_point(shape = 17) +
+  geom_hline(yintercept = 0.5, linetype = 'dashed') +
+  coord_flip() +
+  labs(
+    x = 'Subject',
+    y = 'Proportion Selection of Safe Deck'
+  ) + 
+  theme_bw() + 
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.grid = element_blank())
+```
+
+At baseline, some people are more risk averse than others, which could make it more difficult to detect the predicted effects. We can also look at individual variablility in the critical main effect of difficulty:
+
+```{r}
+condMeans <- d %>% 
+  group_by(subject, difficulty) %>% 
+  summarize(ssd = mean(selSafeDeck)) %>% 
+  group_by(difficulty) %>% 
+  summarize(ssd = mean(ssd))
+
+# uSubjects <- unique(d$subject)
+# 
+# subjectCode <- data.frame(subject = uSubjects)
+# subjectCode$subjectLabel <- factor('', levels = c('Supports prospect theory', 'Opposite prospect theory', 'No difference'))
+# 
+# for (i in uSubjects) {
+#   t <- d[d$subject == i, c('difficulty', 'selSafeDeck')]
+#   mns <- c(e = mean(t[t$difficulty == 'Easier than Reference',]$selSafeDeck), h = mean(t[t$difficulty == 'Harder than Reference',]$selSafeDeck))
+#   
+#   
+#   if (mns[1] != mns[2]) {
+#     m1 <- t.test(t[t$difficulty == 'Easier than Reference',]$selSafeDeck, t[t$difficulty == 'Harder than Reference',]$selSafeDeck, within = TRUE)
+#   } else {
+#     subjectCode[subjectCode$subject == i,]$subjectLabel <- 'No difference'
+#     next
+#   }
+#   
+#   if (mns['e'] > mns['h'] & m1$p.value < .05) {
+#     subjectCode[subjectCode$subject == i,]$subjectLabel <- 'Supports prospect theory'
+#   } else if (mns['e'] < mns['h'] & m1$p.value < .05) {
+#     subjectCode[subjectCode$subject == i,]$subjectLabel <- 'Opposite prospect theory'
+#   } else {
+#     subjectCode[subjectCode$subject == i,]$subjectLabel <- 'No difference'
+#   }
+# } 
+# 
+# d <- subjectCode %>% 
+#   inner_join(d)
+# 
+# d %>% 
+#   group_by(subject, subjectLabel) %>% 
+#   summarize(count = n()) %>% 
+#   group_by(subjectLabel) %>% 
+#   summarize(count = n())
+
+d %>% 
+  group_by(subject, difficulty) %>% 
+  summarize(ssd = mean(selSafeDeck)) %>% 
+  ggplot(aes(x = difficulty, y = ssd)) +
+  geom_violin(fill = NA, alpha = 0.2) + 
+  geom_boxplot(fill = NA, alpha = 0.3) +
+  geom_jitter(alpha = 0.4, width = .05, height = 0) +
+  geom_line(aes(group = subject), linetype = 'dashed', alpha = .3) +
+  geom_point(data = condMeans, aes(x = difficulty, y = ssd), size = 4, shape = 23, color = 'black', fill = 'red') +
+  geom_hline(yintercept = 0.5, linetype = 'dotted') +
+  geom_label(data = condMeans, aes(x = difficulty, y = ssd, label = round(ssd, 2)), hjust = 1.5, vjust = 1.5) +
+  scale_color_manual(name = 'Subject Label', values = c(`Supports prospect theory` = 'dark green', `Opposite prospect theory` = 'red', `No difference` = 'black')) +
+  ylim(0,1) + 
+  theme_bw() +
+  labs(
+    title = 'Selection of safe deck by difficulty and subject',
+    x = 'Difficulty',
+    y = 'Proportion Selection of Safe Deck',
+    caption = 'Red diamond reflects condition means. Horizontal, black, solid lines reflect medians.'
+  ) +
+  theme(legend.position = 'bottom')
+```
+
+
+The extent to which the lines intersect reflects between-subject variability in the main effect of difficulty. The objective of fitting a mixed model to these data will be to control for some of this between-subject variability to get a better sense of what the true effects in the data might be.
+
+## Fitting
+
+There are many different statistical packages in R that can fit generalized linear mixed models, but I'll be focusing on `lme4` by Bates, Maechler, Bolker, & Walker (2015).  
+
+I'm approaching model fits with the logic spelled out in [Bar et al., 2013](barr_et_al_2013.pdf){target=_blank}, which is to specify the maximal model allowed by the data and progressively scale it back. One should progressively drop terms from the model if the model doesn't converge or if those terms prove to be insignificant. I'm including (effect coded) difference and difficulty, with selection of safe deck (`[0, 1]`) as the binary outcome. A logit link function will be used as the outcome is consistent with a Bernoulli distribution, and I'll be using LaPlace estimation at first. 
+
+Fit the maximal model:
+
+*The p-vales and standard errors returned here are from a Wald Z test and are known to be unreliable.*
+
+```{r}
+d$differenceE <- ifelse(d$difference == 'Moderate', -0.5, 0.5)
+d$difficultyE <- ifelse(d$difficulty == 'Easier than Reference', -0.5, 0.5)
+m1_maximal <- glmer(selSafeDeck ~ differenceE * difficultyE + (1 + difficultyE * differenceE | subject), data = d, family = binomial, control = glmerControl(optimizer = 'bobyqa'))
+summary(m1_maximal)
+```
+
+I'm going to jump right to dropping the random interaction and compare AICs
+
+```{r}
+m1_mainEffects <- glmer(selSafeDeck ~ differenceE * difficultyE + (1 + difficultyE + differenceE | subject), data = d, family = binomial, control = glmerControl(optimizer = 'bobyqa'))
+#AICtab(m1_maximal, m1_mainEffects, nobs = nrow(d))
+anova(m1_mainEffects, m1_maximal)
+```
+
+The maximal model fails the AIC test against the simpler, main effects model. Taking the effects out reveals that the effects don't explain a significant proportion of the variance according to a chi-squre test. Stepping down again:
+
+```{r}
+m1_noCov <- glmer(selSafeDeck ~ differenceE * difficultyE + (1| subject) + (0 + difficultyE | subject) + (0 + differenceE | subject) , data = d, family = binomial, control = glmerControl(optimizer = 'bobyqa'))
+#AICtab(m1_noCov, m1_mainEffects, nobs = nrow(d))
+anova(m1_noCov, m1_mainEffects)
+```
+
+The covariances aren't significant either. Stepping down again.
+
+```{r}
+m1_noDiff <- glmer(selSafeDeck ~ differenceE * difficultyE + (1| subject) + (0 + differenceE | subject) , data = d, family = binomial, control = glmerControl(optimizer = 'bobyqa'))
+#AICtab(m1_noCov, m1_noDiff, nobs = nrow(d))
+anova(m1_noCov, m1_noDiff)
+```
+
+The random slope of difference is indeed a significant parameter in the model, so we can conclude that the model with the intercept and both slope variances (with no covariances) is the optimal model.  
+
+*The same model is the best fitting one across both experiments.*
+
+Now assessing how much gain in precision there is from using Gauss-Hermite quadrature estimation instead of LaPlace. I'll assess this by looking at how estimation of the effects changes as a function of increasing quadrature points.  
+
+Alright, nevermind. It seems that lme4 doesn't support using Gauss-Hermite estimation with more than one scalar random effect term... it appears to be a [known limitation](https://github.com/lme4/lme4/issues/123)---it's an old thread but I can't find much recent discussion on the topic.  
+
+I'll run it on an intercept-only model just for fun.
+
+```{r}
+m1_intercept <- glmer(selSafeDeck ~ differenceE * difficultyE + (1 | subject), data = d, family = binomial, control = glmerControl(optimizer = 'bobyqa'))
+```
+```{r}
+agqfun <- function(i) {
+  f <- update(m1_intercept, nAGQ = i)
+  c(fixef(f), sqrt(unlist(VarCorr(f))))
+}
+agqvec <- 1:25
+agqres <- sapply(agqvec, agqfun)
+```
+
+```{r}
+t <- data.frame(agqres)
+tarNames <- c('Intercept', 'Difference', 'Difficulty', 'Interaction', 'RandomIntercept')
+colnames(t) <- 1:25
+
+t %>% 
+  mutate(term = tarNames) %>% 
+  gather(agq, estimate, `1`:`25`) %>% 
+  ggplot(aes(x = as.numeric(agq), y = estimate, group = 1)) +
+  geom_line() +
+  facet_wrap(~term, scales = 'free') +
+  labs(
+    x = 'Number of adaptive Gauss-Hermite quadrature points',
+    y = 'Estimate'
+  ) + 
+  theme_bw() + 
+  theme(strip.background = element_rect(color = 'black', fill = 'white'))
+```
+
+So there are adjustments to the effects depending on the number of quadriture points, but the absolute scale is so small. It's interesting that all parameters seem to asymptote around n = 10. I'm feeling like I'm not missing much by keeping LaPlace estimation (n = 1).
+
+**In summary, the model estimating only the random effects of intercept and slopes of difference and difficulty grouped by subject is the optimal model**
+```{r}
+m1 <- m1_noCov
+```
+
+
+## Diagnostics and model summaries
+
+Diagnostic plots:
+
+```{r}
+p1 <- plot(m1, id = 0.05, id_labels = ~.obs)
+p1
+```
+
+Predicted by residual plots are notoriously uninformative for binary data. What about plotting residuals by condition instead:
+
+```{r}
+d$resid <- resid(m1)
+d$difference <- factor(d$difference, levels = levels(d$difference)[c(2,1)])
+ggplot(d, aes(x = difficulty, y = resid, fill= difference)) +
+  geom_boxplot() +
+  labs(
+    x = 'Difficulty',
+    y = 'Residuals'
+  ) +
+  scale_fill_manual(name = 'Difference', values = c(Extreme = 'dark grey', Moderate = 'white')) + 
+  coord_flip() +
+  theme_bw() + 
+  theme(legend.position = c(.1, .5),
+        axis.text.y = element_text(angle = 90, hjust = .5))
+```
+
+It seems like the model performed the poorest for the extreme, harder than reference condition, where it might have slightly over estimated the extent to which people were likely to select the risky deck.
+
+```{r}
+rans <- data.frame(ranef(m1, condVar = TRUE))
+
+p1 <- rans %>% 
+  filter(term == '(Intercept)') %>% 
+  ggplot(aes(x = reorder(grp, condval), y = condval)) + 
+  geom_point() +
+  geom_errorbar(aes(ymin = condval - condsd, ymax = condval + condsd), width = 0) + 
+  coord_flip() +
+  labs(
+    x = '',
+    y = 'Intercept'
+  ) +
+  theme_bw() +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+p2 <- rans %>% 
+  filter(term == 'difficultyE') %>% 
+  ggplot(aes(x = reorder(grp, condval), y = condval)) + 
+  geom_point() +
+  geom_errorbar(aes(ymin = condval - condsd, ymax = condval + condsd), width = 0) + 
+  coord_flip() +
+  labs(
+    x = '',
+    y = 'Difficulty Slope'
+  ) +
+  theme_bw() +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+p3 <- rans %>% 
+  filter(term == 'differenceE') %>% 
+  ggplot(aes(x = reorder(grp, condval), y = condval)) + 
+  geom_point() +
+  geom_errorbar(aes(ymin = condval - condsd, ymax = condval + condsd), width = 0) + 
+  coord_flip() +
+  labs(
+    x = '',
+    y = 'Difference Slope'
+  ) +
+  theme_bw() +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+
+grid.arrange(p1, p2, p3, nrow = 1)
+```
+
+Pretty wide variability in the difficulty slope; not much at all on the difference slope.  
+
+*Just a note, these are the conditional modes. Ie, how much each subject deviates from the population-level estimate.*
+
+
+## Inference
+
+The standard errors around the effects from the Wald Z test are known to be unreliable. This is because this test assumes normally distributed residuals, when residuals are more often skewed in practice. The Profile Likelihood Based Confidence Interval is often considered a better method because it tests models against the Chi Square distribution. One popular way to do this is a bootstrap method, and that's what I'll be doing here. Another popular way of computing confidence intervals is via Markov chain Monte Carlo simulations, but I'm not doing that today.
+
+```{r eval = FALSE}
+m1_CI_prof <- confint(m1)
+m1_CI_quad <- confint(m1, method = 'Wald')
+m1_CI_boot <- confint(m1, method = 'boot')
+
+CIs <- data.frame(m1_CI_prof)
+CIs$factor <- row.names(CIs)
+CIs$method <- 'prof'
+
+t1 <- data.frame(m1_CI_quad)
+t1$factor <- row.names(t1)
+t1$method <- 'Wald'
+
+t2 <- data.frame(m1_CI_boot)
+t2$factor <- row.names(t2)
+t2$method <- 'boot'
+
+CIs <- rbind(CIs, t1, t2)
+CIs <- CIs %>% 
+  filter(!grepl('.sig', factor))
+colnames(CIs)[1:2] <- c('lower', 'upper')
+
+save(CIs, file = 'CIs.RData')
+```
+
+```{r}
+load('CIs.RData')
+
+fe <- data.frame(estimate = fixef(m1), factor = names(fixef(m1)))
+
+CIs <- fe %>% 
+  inner_join(CIs)
+
+CIs$factor <- factor(CIs$factor)
+CIs$factor <- factor(CIs$factor, levels = levels(CIs$factor)[c(3,2,4,1)])
+
+temp <- CIs[CIs$factor == 'difficultyE' & CIs$method == 'boot',]
+difficultyPrint <- data.frame(parameter = c('Difficulty Slope', 'CI Upper', 'CI Lower'), value = c(exp(temp$estimate), exp(temp$upper), exp(temp$lower)))
+difficultyPrint
+
+CIs %>% 
+  ggplot(aes(x = factor, y = estimate)) +
+  geom_hline(yintercept = 0, linetype = 'dotted') +
+  geom_errorbar(aes(ymin = lower, ymax = upper, color = method), position = position_dodge(width = .5), width = 0) +
+  geom_point(aes(color = method), position = position_dodge(width = .5)) +
+  coord_flip()+
+  scale_x_discrete(labels = c(`(Intercept)` = 'Intercept', `difficultyE` = 'Difficulty', `differenceE` = 'Difference', `differenceE:difficultyE` = 'Interaction')) +
+  labs(
+    y = 'Effect (log odds of choosing safe deck)',
+    x = '',
+    caption = 'Lines represent 95% confidence intervals according to Method'
+  ) +
+  scale_color_discrete(name = 'Method') +
+  theme_bw() +
+  theme(legend.position = c(.9, .3))
+  
+```
+
+A quick note about variable coding. Here, the reference for Difficulty is 'Easier than Reference' and the reference for Difference is 'Moderate'. So the effects can be interpreted as the change in log odds of selecting the safe deck when going from easier than reference to harder than reference, for example.  
+
+I notice that confidence intervals of the critical effect (i.e., main effect of difficulty) is well outside the null hypothesis (ie, 0).
+
+
+## Hypothesis testing
+
+Here are the crude Wald estimates from the original model:
+
+```{r}
+coef(summary(m1))
+```
+
+The p-values here at least seem to track what one's intuitions might be from looking at the confidence intervals above. But doing likelihood ratio tests will give more accurate p values.
+
+The effect of difference:
+
+```{r}
+m1_noDifference <- update(m1, .~.-differenceE)
+anova(m1, m1_noDifference)
+```
+
+The effect of difficulty:
+
+```{r}
+m1_noDifficulty <- update(m1, .~.-difficultyE)
+anova(m1, m1_noDifficulty)
+```
+
+The interaction:
+
+```{r}
+m1_noInt <- glmer(selSafeDeck ~ differenceE + difficultyE + (1 | subject) + (0 + difficultyE | subject) + (0 + differenceE | subject), data = d, family = binomial, control = glmerControl(optimizer = 'bobyqa'))
+anova(m1, m1_noInt)
+```
+
+I'll do an even more precise bootstrapped simulation for the difficulty effect, since it's the critical effect:  
+
+This is essentially simulating data from the null model, fitting the null model and the alternative model to the null simulated data, then comparing the models and constructing a distribution from the difference in $-2log(L)$, which should approximate a chi-square distribution with 1 degree of freedom (ie, the difference in number of parameters between the two models). Then, as a significance test, I can compare the observed $-2log(L)$ against this reference distribution.
+
+```{r eval = FALSE}
+PBsimfun <- function(m0,m1,x=NULL) {
+  if (is.null(x)) x <- simulate(m0)
+  m0r <- try(refit(m0,x[[1]]),silent=TRUE)
+  if (inherits(m0r,"try-error")) return(NA)
+  m1r <- try(refit(m1,x[[1]]),silent=TRUE)
+  if (inherits(m1r,"try-error")) return(NA)
+    c(-2*(logLik(m0r)-logLik(m1r)))
+}
+
+set.seed(101)
+
+PBrefdist <- replicate(400, PBsimfun(m1_noDifficulty, m1))
+save(PBrefdist, file = 'PBrefdist.RData')
+```
+
+
+```{r}
+load('PBrefdist.RData')
+
+difficulty <- data.frame(refDist = PBrefdist, principle = dchisq(PBrefdist, 1))
+difficulty$refDistDensity <- difficulty$refDist / (sum(difficulty$refDist))
+
+difficulty %>% 
+  ggplot() + 
+  #geom_density(aes(x = density), color = 'red') +
+  geom_histogram(aes(x = refDist, y = ..density..), bins = 20, fill = 'light grey', color = 'black') +
+  labs(
+    x = 'Reference Distribution',
+    y = 'Density'
+  ) +
+  theme_bw()
+
+#  geom_density(aes(x = density),fill = NA, color = 'red')
+```
+
+
+```{r}
+obs <- -2 * (logLik(m1_noDifficulty) - logLik(m1))
+pval <- mean(PBrefdist >= obs)
+paste('Difficulty:', mean(PBrefdist >= obs))
+```
+
+$X(1)^2 = `r round(obs,2)`, p = `r round(pval, 3)`$
+
+I think that's about as accurate as it gets, effect of difficulty is robust. Choices were significantly more risk averse when outcomes were framed as harder than reference vs. easier than reference.
