@@ -3,7 +3,7 @@
 
 /* Dave's Root Variabless */
 :root {
-    --primary-bg: #fcf8f2;
+    --primary-bg: #FCFDFF;
     --primary-text: #353d49;
     --secondary-text: #252627;
     --link-color: #879094;
@@ -74,7 +74,7 @@
 }
 
 .condense {
-    line-height: .8;
+    line-height: 1.3;
 }
 
 
@@ -119,4 +119,31 @@
     border-radius: 8px; 
     background-color: none; 
     margin: 20px 0;
+}
+
+/* For table presentation */
+.rt-pagination {
+  display: flex !important;
+  justify-content: center !important; /* centers everything */
+  align-items: center !important;
+  flex-wrap: nowrap !important;       /* no wrapping, ever */
+  gap: 0.5em;                          /* adds space between items */
+}
+
+.rt-pagination-info {
+  display: none; /* Optional: hides "1–10 of 21 rows" if you don't want it */
+}
+
+.rt-pagination-nav {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.rt-search {
+  width: auto !important;
+  max-width: 250px;
+  float: right;
+  margin: 0 0 8px 8px;
 }

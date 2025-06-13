@@ -1,0 +1,78 @@
+Title (suggestion):
+
+“Forecasting with the Crowd: How Perceptions of Community Behavior Improve COVID-19 Predictions”
+1. Hook (The Human Angle)
+
+    What if we could improve pandemic forecasting by asking people how well their neighbors are following the rules?
+
+Start with a compelling problem: predicting the trajectory of a disease like COVID-19 is notoriously difficult — especially when people's behavior (like wearing masks or social distancing) shifts rapidly. Introduce the challenge of capturing real-time compliance with public health measures and the traditional difficulty of modeling it.
+2. Motivation (Why This Matters)
+
+    Most models assume fixed parameters for how diseases spread — but those parameters change when people change.
+
+Explain the limitations of traditional SIR-type models in the face of rapidly shifting human behavior. Emphasize the importance of understanding not just what policies are in place, but how people perceive and respond to them.
+3. The Innovation (Crowdsourced Perception as a Signal)
+
+    Instead of relying on top-down policy data, we used bottom-up, crowdsourced estimates of compliance — and it worked.
+
+Introduce the key idea: using survey-based, weekly perceptions of how well others are following non-pharmaceutical interventions (NPIs) as a proxy for community compliance. This can be positioned as a scalable, real-time behavioral signal that augments epidemiological models.
+4. The Modeling (What You Did, Simply)
+
+    We integrated these perception signals into a Bayesian VARTV model to predict cases across U.S. states.
+
+Give a high-level explanation of what you did technically:
+
+    Started with a classic compartmental model (SIR).
+
+    Then introduced a multivariate time-series model (Bayesian VAR with time-varying coefficients).
+
+    Highlight how perceptions of NPI compliance helped adjust transmission dynamics dynamically across time and geography.
+
+Use a simple diagram if possible to visualize:
+Perceived Compliance → Modeled Transmission Rate → Forecasted Cases
+5. Why Bayesian? (Optional but Useful Aside)
+
+    Bayesian methods let us reason with uncertainty and make probabilistic forecasts — not just single guesses.
+
+Explain briefly what the Bayesian framework enabled:
+
+    Full posterior distributions over time-varying transmission parameters.
+
+    Credible intervals on forecasts.
+
+    The ability to simulate future scenarios with real uncertainty built in.
+
+This section should demystify Bayesian inference for the non-expert — not flaunt it.
+6. Key Results (With Visuals)
+
+    Adding perception data improved forecasts in most states and smoothed out anomalies.
+
+Share a few compelling results:
+
+    A line plot comparing forecasted vs. actual cases with and without perception data.
+
+    Perhaps a heatmap of performance across states.
+
+Keep the tone: pragmatic, not flashy. Emphasize real-world value — better foresight, less noise, improved policy relevance.
+7. Implications (The Big Picture)
+
+    This approach can generalize to any infectious agent — especially in places where policy is unclear but people talk.
+
+Tie it back to hospitals and public health:
+
+    Could be used for RSV or flu season planning.
+
+    Applicable for healthcare systems tracking regional behavioral compliance.
+
+    Easy to extend with EHR or admission data for richer inference.
+
+8. Closing (Your Voice)
+
+    For me, this project was a bridge between computational rigor and messy human reality. And it taught me something: forecasts get better when we listen.
+
+Let this last paragraph be reflective, short, and honest. Frame your interest in hospital data science as a continuation of this theme: understanding complex systems that depend on people and data working together.
+Optional Sidebar or Appendix:
+
+    “What is a Bayesian VAR?” (short + clear)
+
+    “Why we didn’t just use policy stringency indexes”
