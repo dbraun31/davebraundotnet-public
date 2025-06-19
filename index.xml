@@ -6,8 +6,15 @@
     <description>Recent content on David Braun</description>
     <generator>Hugo</generator>
     <language>en-US</language>
-    <lastBuildDate>Thu, 24 Apr 2025 13:09:13 -0600</lastBuildDate>
+    <lastBuildDate>Thu, 19 Jun 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Exploring fraud detection through hands-on modeling and smart tradeoffs.</title>
+      <link>/2025/06/19/exploring-fraud-detection-through-hands-on-modeling-and-smart-tradeoffs./</link>
+      <pubDate>Thu, 19 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>/2025/06/19/exploring-fraud-detection-through-hands-on-modeling-and-smart-tradeoffs./</guid>
+      <description>I walk through building a fraud detection model with random forests, showing how to tune parameters, evaluate performance, and factor in real business costs—demonstrating how data science and risk management come together for smarter fraud prevention.</description>
+    </item>
     <item>
       <title>Does the brain cope with anxiety by numbing out?</title>
       <link>/2025/04/24/does-the-brain-cope-with-anxiety-by-numbing-out/</link>

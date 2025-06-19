@@ -1,7 +1,7 @@
-
 /* Read more buttonss */
 
 /* Dave's Root Variabless */
+
 :root {
     --primary-bg: #FCFDFF;
     --primary-text: #353d49;
@@ -53,6 +53,7 @@
 
 
 /* Other stuff */
+
 
 .subtitle {
 	word-wrap: break-word;
@@ -147,3 +148,16 @@
   float: right;
   margin: 0 0 8px 8px;
 }
+
+.Reactable .rt-table,
+.reactable .rt-table,
+.Reactable .rt-td,
+.reactable .rt-td,
+.Reactable .rt-th,
+.reactable .rt-th {
+  background-color: var(--primary-bg) !important;
+  color: var(--secondary-text) !important;
+  border-color: var(--borders) !important;
+}
+
+*/
