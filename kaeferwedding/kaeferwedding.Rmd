@@ -1,0 +1,94 @@
+---
+title: "Suggested Recipes for Caitlin and Lukas"
+output:
+    html_document:
+        theme: flatly
+        toc: true
+        toc_float: true
+        css: custom.css
+knit:
+    (function(inputFile, encoding) {
+        rmarkdown::render(inputFile,
+                            encoding=encoding,
+                            output_file='index.html')})
+---
+
+Hey guys! Alison and I know how time consuming and frustrating it can be to 
+find new recipes that are tasty and ideally healthy and easy to make. We're
+listing some of our favs here and hope they work out for you!
+
+We've been on a bit of a meat-free kick, so we've been trying out things like tofu and seitan (aka, "wheat meat"). But you could probably sub tofu for beef or chicken and it would work great for any of these. I'm including some of those recipes along with some of our favorite side dishes.
+
+# Full meals
+
+## Tofu based
+
+### Dubu jorim
+
+* [Recipe](https://www.dropbox.com/scl/fi/qb1mr0pn00uj3spw1idhj/dubu_jorim.pdf?rlkey=00779zq855ma50ffe3i5zt9ue&dl=0)
+* This is one of Alison's favorites. Thin strips of pan-fried tofu with an Asian style sauce. Goes great with rice and broccoli.
+
+### General Tso Tofu
+
+* [Recipe](https://www.dropbox.com/scl/fi/t02vhs4usl19m8ts2e4n9/general_tso_tofu.pdf?rlkey=zhdhgpfcw7b5iin5mdfouktdv&dl=0)
+* While we're on the Asian theme, this is a really great general tsos style tofu, also goes great with rice and broccoli.
+
+### Crumbled tofu baked ziti
+
+* [Recipe](https://www.dropbox.com/scl/fi/6z80h0oyvgql617cxpxt5/ziti-tofu.pdf?rlkey=a8eawbiugi1ssklapjb5xp45y&dl=0)
+* Like a ziti with ground beef meat sauce, except it's crumbled tofu. Super filling.
+
+### Sushi rolls
+
+(if we can find the recipe)
+
+### Shawarma tacos
+
+* [Recipe](https://www.dropbox.com/scl/fi/m10qknkqd4u73q1xfndv9/shawarma-crunchadilla.pdf?rlkey=r65ilrkx8vswa4yeotijq9v92&e=1&dl=0)
+    * [Recipe for tofu shawarma](https://www.dropbox.com/scl/fi/d9b3qxybjivv5dij9axz2/tofu-shawarma.pdf?rlkey=t57n92zh3una4ua89wgsqf54h&dl=0)
+    * [Recipe for garlic cashew sauce](https://www.dropbox.com/scl/fi/x0gqpww7sfa4oblekhd7i/garlic-cashew-sauce.pdf?rlkey=3on7pkw2e3bxg5ah6oq6b8nzp&dl=0)
+    
+* This is a great one to meal prep the tofu and sauce, then you can quickly throw together hard- or soft-shell tacos. Makes a great lunch.
+
+## Seitan
+
+### Plant-based sliced deli 'meat'
+
+* [Recipe (youtube)](https://www.youtube.com/watch?v=nilU3ritKMg)
+* This one has been a game changer for me. It's weird to make, but mine turned out *exactly* like this video. The reuben sandwiches from it are incredible and I've even been using it on breakfast sandwiches. I cut my final log into three main sections and froze two of them, and everything keeps and reheats incredibly well.
+* This guy's YouTube channel is also awesome. We get a lot of our recipes from these guys.
+
+## General
+
+### Autumn grain bowl
+
+* [Recipe](https://www.dropbox.com/scl/fi/ny4vpaoi8k25dcrrfes4f/autumn-bowl.pdf?rlkey=6qkgh7pd9ntl979n9bf3uscjr&dl=0)
+* This one requires a bit of prep, but I find it so tasty and fresh. Once you've prepped it you can throw it together quickly as long as the ingredients stay fresh.
+
+
+# Sides
+
+### Buffalo mac and cheese
+
+* [Recipe](https://www.dropbox.com/scl/fi/qthki6u1ewgce2pg8e1se/buffalo-mac-cheese.pdf?rlkey=7ayb1ginihqqnn7cueyi0n52s&dl=0)
+* This is a super tasty homemade spicy mac and cheese. The downside is you'll never want to make boxed make and cheese ever again.
+
+### Greek rice with lemon
+
+* [Recipe](https://www.dropbox.com/scl/fi/qaxznp6thbb0ur9qxkqt7/greek_rice_lemon.pdf?rlkey=16gfkqlsu6omn6jrlp9kf2cr8&dl=0)
+* A simple and very tasty rice recipe.
+
+### Roasted vegetable pasta salad
+
+* [Recipe](https://www.dropbox.com/scl/fi/fe9l2w342nixca0onch1a/roasted-vegetable-pasta.pdf?rlkey=zf23493j6jmwbfgmakp3neiil&dl=0)
+* This one is great when you can get fresh produce. It's a bit of work to chop everything, but I find the flavors to be very yummy.
+
+# Juice
+
+### Carrot and apple juice
+
+* [Recipe](https://www.dropbox.com/scl/fi/9trwwn4z07vlf5izsthn0/carrot-juice.pdf?rlkey=ci52og5nncf3qtffqpc6yz54v&dl=0)
+* Tastes much better than it sounds. This also freezes really well. Goes great with breakfast.
+
+
+And that's it- hope you enjoy! (Do save the PDFs that you like bc I'll prob take this page down from my site in about a year or so)
